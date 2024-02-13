@@ -24,5 +24,4 @@ def user_input() -> str:
 
 doc = cif.read_file(user_input())
 crystal = Crystal(doc)
-
-crystal.plot()
+print(crystal)

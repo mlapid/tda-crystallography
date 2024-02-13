@@ -15,6 +15,9 @@ class Crystal:
 
         self.unitCell = UnitCell(self.block)
 
+    def __str__(self) -> str:
+        return f'Crystal of {len(self.unitCell.cartesianCoordinates)} vertices with a unit cell {self.unitCell}'
+
     def plot(self) -> None:
         # Plot in 3D Cartesian coordinates
 

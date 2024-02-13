@@ -17,7 +17,7 @@ class UnitCell:
         self.cartesianCoordinates = self.__get_cartesian_coordinates()
 
     def __repr__(self):
-        return f'{self.cell}'
+        return f'{self.cell.a, self.cell.b, self.cell.c, self.cell.alpha, self.cell.beta, self.cell.gamma}'
 
     def __get_unit_cell(self) -> gemmi.UnitCell:
         block = self.block
