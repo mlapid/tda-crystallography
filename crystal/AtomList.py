@@ -9,8 +9,6 @@ class AtomList(UserList):
         for item in self:
             if atom.is_equal(item):
                 return True
-            else:
-                continue
         return False
 
     def append(self, atom: Atom) -> None:
