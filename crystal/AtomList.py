@@ -7,7 +7,7 @@ class AtomList(UserList):
 
     def __contains__(self, atom: Atom) -> bool:
         for item in self:
-            if atom.is_equal(item):
+            if atom == item:
                 return True
         return False
 
