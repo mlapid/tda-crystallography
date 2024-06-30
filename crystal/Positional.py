@@ -7,6 +7,7 @@ import math
 import numpy as np
 import pandas as pd
 from collections import UserList
+from UnitCell import UnitCell
 
 class PositionalCoordinate:
     def __init__(self, x: float, y: float, z: float):
@@ -62,7 +63,7 @@ class PositionalCoordinate:
         dist_y: float = abs(self.y - positionalCoordinate.y)
         dist_z: float = abs(self.z - positionalCoordinate.z)
 
-        return math.sqrt(dist_x ** 2 + dist_y ** 2 + dist_z ** 2)
+        return [dist_x, dist_y, dist_z]
 
 
 
@@ -114,23 +115,45 @@ class PositionalCoordinateList(UserList):
 
         return distance_dict
     
-    def calculate_distance_matrix(self) -> np.array:
+    # def calculate_distance_matrix(self) -> np.array:
+
+    #     n = len(self)
+    #     distance_matrix: np.array = np.zeros((n, n))
+
+    #     for i in range(n):
+    #         coordinate_one: PositionalCoordinate = self[i]
+    #         for j in range(n):
+    #             if i == j:
+    #                 distance_matrix[i][j] = 0
+    #                 continue
+                
+    #             coordinate_two = self[j]
+
+    #             dist_x, dist_y, dist_z = coordinate_one.distance(coordinate_two)
+    #             distance: float = math.sqrt(dist_x ** 2 + dist_y ** 2 + dist_z ** 2)
+    #             distance_matrix[i][j] = distance
+
+    #     return distance_matrix
+    
+    def calculate_distance_matrix(self, unit_cell, boundary_conditions: bool) -> np.array:
 
         n = len(self)
         distance_matrix: np.array = np.zeros((n, n))
 
         for i in range(n):
-            coordinate_one: PositionalCoordinate = self[i]
-            for j in range(n):
-                if i == j:
-                    distance_matrix[i][j] = 0
-                    continue
-                
-                coordinate_two = self[j]
-
-                dist_x, dist_y, dist_z = coordinate_one.distance(coordinate_two)
+            for j in range(i+1, n):
+                dist_x: float; dist_y: float; dist_z: float
+                dist_x, dist_y, dist_z = self[i].distance(self[j])
+                if boundary_conditions:
+                    if dist_x > 1/2 * unit_cell.a:
+                        dist_x = unit_cell.a - dist_x
+                    if dist_y > 1/2 * unit_cell.b:
+                        dist_y = unit_cell.b - dist_y
+                    if dist_z > 1/2 * unit_cell.c:
+                        dist_z = unit_cell.c - dist_z
                 distance: float = math.sqrt(dist_x ** 2 + dist_y ** 2 + dist_z ** 2)
                 distance_matrix[i][j] = distance
+                distance_matrix[j][i] = distance
 
         return distance_matrix
     

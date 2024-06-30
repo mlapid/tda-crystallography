@@ -51,8 +51,8 @@ def wasserstein_distance_matrix(crystals: dict, dimension: int) -> pd.DataFrame:
             crystal_A: str = crystal_list[i]
             crystal_B: str = crystal_list[j]
 
-            persistence_A: np.array = crystals[crystal_A][dimension]
-            persistence_B: np.array = crystals[crystal_B][dimension]
+            persistence_A: np.array = crystals[crystal_A]['persistence'][dimension]
+            persistence_B: np.array = crystals[crystal_B]['persistence'][dimension]
 
             persistence_A = np.array(list(filter(lambda i: i[1] < float('inf'), persistence_A)))
             persistence_B = np.array(list(filter(lambda i: i[1] < float('inf'), persistence_B)))

@@ -158,7 +158,7 @@ class FractionalCoordinateList(UserList):
 
         return distance_dict
     
-    def calculate_distance_matrix(self, boundary_conditions) -> np.array:
+    def calculate_distance_matrix(self, boundary_conditions: bool) -> np.array:
 
         n = len(self)
         distance_matrix: np.array = np.zeros((n, n))
