@@ -1,16 +1,8 @@
 # tda-crystallography
-Persistent Homology + Crystallography
+Topological Data Analysis for Crystallography
 
-<!-- FractionalCoordinates
-PositionalCoordinates
+# About The Project
 
-gemmi.Fractional -> Fractional
+## Data Sources
 
-## FractionalList
-
-Contains coordinates of type gemmi.Fractional
-
-### Fractional
-
-1 Symmetry to many Points -> list of points
-Many symmetries to 1 point -> list of points -->
+[Database of Zeolite Structures](https://www.iza-structure.org/IZA-SC/ftc_table.php)
