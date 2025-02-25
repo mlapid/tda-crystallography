@@ -1,4 +1,9 @@
 .DS_Store
 
+.pytest_cache/
+.venv/
 venv/
 __pycache__/
+dist/
+
+legacy/
