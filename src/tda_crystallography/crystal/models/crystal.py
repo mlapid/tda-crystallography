@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 from pydantic import BaseModel
+from pydantic.config import ConfigDict
 
 from tda_crystallography.crystal.models.unit_cell import UnitCell
 from tda_crystallography.crystal.models.symmetry import Symmetry
@@ -12,6 +13,12 @@ from tda_crystallography.crystal.models.fractional_coordinate import FractionalC
 from tda_crystallography.crystal.models.positional_coordinate import PositionalCoordinate
 
 class Crystal(BaseModel):
+    model_config = ConfigDict(
+        title='Crystal',
+        frozen=True,
+        arbitrary_types_allowed=True
+    )
+
     crystal_name: str
     crystal_system: str
     space_group: int
@@ -51,31 +58,16 @@ class Crystal(BaseModel):
     @property
     def extended_positional_coordinates(self) -> set[PositionalCoordinate]:
         return {coordinate.orthogonalise(self.unit_cell) for coordinate in self.extended_fractional_coordinates}
-    
-    @property
-    def df_fractional_coordinates(self) -> pd.DataFrame:
-        return self._create_dataframe(self.extended_fractional_coordinates)
 
-    @property
-    def df_positional_coordinates(self) -> pd.DataFrame:
-        return self._create_dataframe(self.extended_positional_coordinates)
-    
-    def _create_dataframe(self, coordinates: set[FractionalCoordinate | PositionalCoordinate]) -> pd.DataFrame:
-        data: list[tuple[float, float, float]] = [(float(c.x), float(c.y), float(c.z)) for c in coordinates]
-        df: pd.DataFrame = pd.DataFrame(data=data, columns=['x', 'y', 'z'])
-        df = df.sort_values(by=['x', 'y', 'z'], ignore_index=True)
-        return df
+    def plot(self, is_normalised: Literal[True, False] = True) -> None:
+        df: pd.DataFrame = self.to_dataframe(is_normalised=is_normalised)
 
-    def plot(self, coordinate_type: Literal['fractional', 'positional'] = 'positional') -> None:
-        if coordinate_type == 'fractional':
-            df: pd.DataFrame = self.df_fractional_coordinates
-        elif coordinate_type == 'positional':
-            df: pd.DataFrame = self.df_positional_coordinates
+        normalisation_status: str = "normalised" if is_normalised else "unnormalised"
         
         fig = px.scatter_3d(
             df, x='x', y='y', z='z',
             size_max = 6,
-            title=f'3D Scatter Plot of {self.crystal_name} crystal ({coordinate_type} coordinates)',
+            title=f'3D Scatter Plot of {normalisation_status} {self.crystal_name} crystal',
             labels={'x': 'X Coordinate', 'y': 'Y Coordinate', 'z': 'Z Coordinate'}
         )
         fig.update_layout(
@@ -87,3 +79,26 @@ class Crystal(BaseModel):
             )
         )
         fig.show()
+
+    def to_dataframe(self, is_normalised: Literal[True, False] = True) -> pd.DataFrame:
+        """
+        Converts the crystal's positional coordinates to a DataFrame.
+
+        Parameters:
+        - is_normalised (bool): Whether to normalise the coordinates.
+
+        Returns:
+        - pd.DataFrame: DataFrame containing the x, y, z coordinates.
+        """
+
+        if is_normalised:
+            coordinates: set[PositionalCoordinate] = {
+                coordinate.normalise(self.unit_cell.normalising_constant) for coordinate in self.extended_positional_coordinates
+            }
+        else:
+            coordinates: set[PositionalCoordinate] = self.extended_positional_coordinates
+
+        data: list[tuple[float, float, float]] = [(float(c.x), float(c.y), float(c.z)) for c in coordinates]
+        df: pd.DataFrame = pd.DataFrame(data=data, columns=['x', 'y', 'z'])
+        df = df.sort_values(by=['x', 'y', 'z'], ignore_index=True)
+        return df

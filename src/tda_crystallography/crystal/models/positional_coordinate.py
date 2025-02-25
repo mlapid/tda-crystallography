@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Self
-
-from pydantic.config import ConfigDict
 from pydantic import BaseModel
+from pydantic.config import ConfigDict
 
 class PositionalCoordinate(BaseModel):
     model_config = ConfigDict(
