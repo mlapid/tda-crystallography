@@ -1,6 +1,7 @@
 from typing import Annotated
 from math import cos, sqrt, pi
 
+import numpy as np
 from pydantic import BaseModel, Field
 
 class UnitCell(BaseModel):
@@ -11,12 +12,21 @@ class UnitCell(BaseModel):
     alpha: Annotated[float, Field(gt=0, lt=180)]
     beta:  Annotated[float, Field(gt=0, lt=180)]
     gamma: Annotated[float, Field(gt=0, lt=180)]
-    
+
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(a={self.a}, b={self.b}, c={self.c}, alpha={self.alpha}, beta={self.beta}, gamma={self.gamma})"
+        return (
+            f'{self.__class__.__name__}('
+            f'a={self.a}, '
+            f'b={self.b}, '
+            f'c={self.c}, '
+            f'alpha={self.alpha}, '
+            f'beta={self.beta}, '
+            f'gamma={self.gamma}'
+            ')'
+        )
     
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(a={self.a}, b={self.b}, c={self.c}, alpha={self.alpha}, beta={self.beta}, gamma={self.gamma})"
+        return self.__str__()
 
     @property
     def volume(self) -> float:
@@ -35,4 +45,13 @@ class UnitCell(BaseModel):
     @property
     def normalising_constant(self) -> float:
         return (1 / self.volume) ** (1/3)
+    
+    @property
+    def orthogonalisation_matrix(self) -> np.ndarray:
+
+        return np.array([
+            [self.a, 0, 0],
+            [0, self.b, 0],
+            [0, 0, self.c]
+        ])
     

@@ -1,6 +1,6 @@
 import pytest
 
-from tda_crystallography.crystal.unit_cell import UnitCell
+from tda_crystallography.crystal.models.unit_cell import UnitCell
 
 class TestUnitCell:
 

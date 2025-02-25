@@ -3,15 +3,25 @@ name = "tda-crystallography"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "mlapid", email = "marcus.lapid@gmail.com" }
-]
+authors = [{ name = "mlapid", email = "marcus.lapid@gmail.com" }]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "gemmi>=0.7.0",
+    "loguru>=0.7.3",
+    "nbformat>=5.10.4",
+    "numpy>=2.2.3",
+    "pandas>=2.2.3",
+    "plotly>=6.0.0",
+    "pydantic>=2.10.6",
+]
 
 [project.scripts]
 tda-crystallography = "tda_crystallography:main"
+crystal = "tda_crystallography.crystal:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8.3.4"]
