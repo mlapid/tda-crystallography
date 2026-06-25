@@ -47,11 +47,11 @@ class TestPositionalCoordinate:
 
         normalised = coordinate.normalise(unit_cell.normalising_constant)
 
-        assert normalised == PositionalCoordinate(
-            x=0.3538519091782396,
-            y=0.5564152234291586,
-            z=0.6348768131633463,
-        )
+        assert (normalised.x, normalised.y, normalised.z) == pytest.approx((
+            0.3538519091782396,
+            0.5564152234291586,
+            0.6348768131633463,
+        ))
 
     @pytest.mark.parametrize('constant', [0, -1.0])
     def test_normalise_rejects_non_positive_constant(

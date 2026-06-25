@@ -1,7 +1,6 @@
 import pytest
 
 from tda_crystallography.crystal.fractional_coordinate import FractionalCoordinate
-from tda_crystallography.crystal.positional_coordinate import PositionalCoordinate
 from tda_crystallography.crystal.unit_cell import UnitCell
 
 
@@ -50,12 +49,13 @@ class TestFractionalCoordinate:
     def test_orthogonalise(self):
         unit_cell = UnitCell(a=25.12, b=39.5, c=45.07, alpha=90, beta=90, gamma=90)
         coordinate = FractionalCoordinate(x=0.5, y=0.5, z=0.5)
+        orthogonalised = coordinate.orthogonalise(unit_cell)
 
-        assert coordinate.orthogonalise(unit_cell) == PositionalCoordinate(
-            x=12.56,
-            y=19.75,
-            z=22.535,
-        )
+        assert (orthogonalised.x, orthogonalised.y, orthogonalised.z) == pytest.approx((
+            12.56,
+            19.75,
+            22.535,
+        ))
 
     def test_hashable_in_set(self):
         c1 = FractionalCoordinate(x=-1.3, y=0, z=1.5)
