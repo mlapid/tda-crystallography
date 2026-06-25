@@ -27,6 +27,7 @@ class CifParser:
     def from_file(cls, path: str | Path, *, block_name: str | None = None) -> Self:
         doc: cif.Document = cif.read_file(str(path))
         block: cif.Block = doc[block_name] if block_name else doc.sole_block()
+
         return cls(block=block)
 
     @property
@@ -62,8 +63,15 @@ class CifParser:
     
     @property
     def atomic_fractional_coordinates(self) -> set[FractionalCoordinate]:
-        x: list[float] = [cif.as_number(x) for x in self.block.find_values('_atom_site_fract_x')]
-        y: list[float] = [cif.as_number(y) for y in self.block.find_values('_atom_site_fract_y')]
-        z: list[float] = [cif.as_number(z) for z in self.block.find_values('_atom_site_fract_z')]
-
-        return {FractionalCoordinate(x=x, y=y, z=z) for x, y, z in zip(x, y, z)}
+        return {
+            FractionalCoordinate(
+                x=cif.as_number(x),
+                y=cif.as_number(y),
+                z=cif.as_number(z),
+            )
+            for x, y, z in zip(
+                self.block.find_values('_atom_site_fract_x'),
+                self.block.find_values('_atom_site_fract_y'),
+                self.block.find_values('_atom_site_fract_z'),
+            )
+        }
