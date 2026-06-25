@@ -20,15 +20,15 @@ class PositionalCoordinate(BaseModel):
 
     def __str__(self) -> str:
         return (
-            f'{self.__class__.__name__}('
-            f'x={self.x}, '
-            f'y={self.y}, '
-            f'z={self.z}'
-            ')'
+            f'{self.__class__.__name__}'
+            f'(x={self.x:.5f}, y={self.y:.5f}, z={self.z:.5f})'
         )
     
     def __repr__(self) -> str:
-        return self.__str__()
+        return (
+            f'{self.__class__.__name__}'
+            f'(x={self.x}, y={self.y}, z={self.z})'
+        )
     
     def normalise(self, normalising_constant: float) -> Self:
         if normalising_constant <= 0:
