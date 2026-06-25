@@ -27,11 +27,11 @@ class FractionalCoordinate(BaseModel):
         return hash((self.__class__.__name__, self.x, self.y, self.z))
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(x={float(self.x)}, y={float(self.y)}, z={float(self.z)})"
+        return f'{self.__class__.__name__}(x={self.x}, y={self.y}, z={self.z})'
     
     def __repr__(self) -> str:
         return self.__str__()
     
     def orthogonalise(self, unit_cell: UnitCell) -> PositionalCoordinate:
         x, y, z = unit_cell.orthogonalisation_matrix @ [self.x, self.y, self.z]
-        return PositionalCoordinate(x=x, y=y, z=z)
+        return PositionalCoordinate(x=float(x), y=float(y), z=float(z))
