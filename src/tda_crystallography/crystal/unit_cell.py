@@ -75,4 +75,4 @@ class UnitCell(BaseModel):
             [a_x, 0, 0],
             [a_y, self.b * sin_alpha, 0],
             [a_z, self.b * cos_alpha, self.c],
-        ])
+        ], dtype=float)
