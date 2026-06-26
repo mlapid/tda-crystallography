@@ -38,7 +38,7 @@ class FractionalCoordinate(BaseModel):
             f'{self.__class__.__name__}'
             f'(x={self.x}, y={self.y}, z={self.z})'
         )
-    
+
     def orthogonalise(self, unit_cell: UnitCell) -> PositionalCoordinate:
         x, y, z = unit_cell.orthogonalisation_matrix @ np.array([self.x, self.y, self.z], dtype=float)
         return PositionalCoordinate(x=x, y=y, z=z)

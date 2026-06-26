@@ -29,7 +29,7 @@ class PositionalCoordinate(BaseModel):
             f'{self.__class__.__name__}'
             f'(x={self.x}, y={self.y}, z={self.z})'
         )
-    
+
     def normalise(self, normalising_constant: float) -> Self:
         if normalising_constant <= 0:
             raise ValueError('Normalising constant must be positive.')
