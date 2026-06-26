@@ -17,18 +17,18 @@ def main() -> None:
     print(f'Space group: {parser.space_group}')
     print(f'Unit cell: {parser.unit_cell}')
     print(f'Symmetry operations: {len(parser.symmetries)}')
-    print(f'Atoms in asymmetric unit: {len(parser.atomic_fractional_coordinates)}')
+    print(f'Atoms in asymmetric unit: {len(parser.atom_sites)}')
 
     print('\nFractional coordinates:')
     for coordinate in sorted(
-        parser.atomic_fractional_coordinates,
+        parser.atom_sites,
         key=lambda c: (c.x, c.y, c.z),
     ):
         print(f'  {coordinate}')
 
     print('\nFirst atom in Cartesian coordinates:')
-    coordinate = next(iter(parser.atomic_fractional_coordinates))
-    positional = coordinate.orthogonalise(parser.unit_cell)
+    coordinate = next(iter(parser.atom_sites))
+    positional = coordinate.to_positional_atom(parser.unit_cell)
     print(f'  fractional: {coordinate}')
     print(f'  positional: {positional}')
 
