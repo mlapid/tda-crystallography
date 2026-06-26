@@ -3,10 +3,11 @@ from typing import Self
 
 from gemmi import cif
 
-from tda_crystallography.crystal.unit_cell import UnitCell
-from tda_crystallography.crystal.symmetry import Symmetry
-from tda_crystallography.crystal.fractional_coordinate import FractionalCoordinate
+from tda_crystallography.crystal.atom import Atom
 from tda_crystallography.crystal.crystal import Crystal
+from tda_crystallography.crystal.symmetry import Symmetry
+from tda_crystallography.crystal.unit_cell import UnitCell
+from tda_crystallography.crystal.fractional_coordinate import FractionalCoordinate
 
 
 class CifParser:
@@ -20,7 +21,7 @@ class CifParser:
             space_group=self.space_group,
             unit_cell=self.unit_cell,
             symmetries=self.symmetries,
-            atomic_fractional_coordinates=self.atomic_fractional_coordinates,
+            atom_sites=self.atom_sites,
         )
 
     @classmethod
@@ -62,16 +63,22 @@ class CifParser:
         return {Symmetry(operation=s.strip('"\'')) for s in self.block.find_values('_symmetry_equiv_pos_as_xyz')}
     
     @property
-    def atomic_fractional_coordinates(self) -> set[FractionalCoordinate]:
-        return {
-            FractionalCoordinate(
-                x=cif.as_number(x),
-                y=cif.as_number(y),
-                z=cif.as_number(z),
+    def atom_sites(self) -> list[Atom]:
+        return [
+            Atom(
+                label=label,
+                element=element,
+                fractional_coordinate=FractionalCoordinate(
+                    x=cif.as_number(x),
+                    y=cif.as_number(y),
+                    z=cif.as_number(z),
+                )
             )
-            for x, y, z in zip(
+            for label, element, x, y, z in zip(
+                self.block.find_values('_atom_site_label'),
+                self.block.find_values('_atom_site_type_symbol'),
                 self.block.find_values('_atom_site_fract_x'),
                 self.block.find_values('_atom_site_fract_y'),
                 self.block.find_values('_atom_site_fract_z'),
             )
-        }
+        ]
