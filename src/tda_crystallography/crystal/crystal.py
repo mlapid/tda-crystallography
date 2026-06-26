@@ -47,8 +47,15 @@ class Crystal(BaseModel):
             ]
         }
     
-    @property
-    def extended_positional_coordinates(self) -> set[PositionalCoordinate]:
-        return {
-            coordinate.orthogonalise(self.unit_cell) for coordinate in self.extended_fractional_coordinates
+    def extended_positional_coordinates(self, *, normalise: bool = True) -> set[PositionalCoordinate]:
+        coordinates: set[PositionalCoordinate] = {
+            coordinate.orthogonalise(self.unit_cell)
+            for coordinate in self.extended_fractional_coordinates
         }
+        
+        if not normalise:
+            return coordinates
+
+        k: float = self.unit_cell.normalising_constant
+
+        return {coordinate.normalise(k) for coordinate in coordinates}
